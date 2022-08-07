@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-        <script>
+        <!-- <script>
             $(function(){
                 var len = 50; // 超過50個字以"..."取代
                 $(".JQellipsis").each(function(i){
@@ -21,18 +21,18 @@
                     }
                 });
             });
-        </script>
+        </script> -->
 
-        <style>
+        <!-- <style>
             .pagination{
                 float: right;
                 margin-top: 10px;
             }
-        </style>
+        </style> -->
     </head>
 
     <body>
-        <div class="container-fluid">
+    <div class="container-fluid">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ route('homepage') }}">課程評鑑系統</a>
@@ -68,62 +68,30 @@
                 </div>
             </nav>
 
-            <h2 class="text-center">課程專區</h2>
-            <figure class="text-end">
-                <blockquote class="blockquote">
-                    <p class="text-end">使用者: {{ Session::get('user_name') }}</p>
-                </blockquote>
-            </figure>
-
-            @if(Session::has("message"))
-            <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
-            @endif
-
-            <br>
             <div class="container-sm">
-            @forelse($classes as $class)
-                <div class="card border-dark mb-3 text-center">
-                    <div class="card-header">
-                        課號: {{ $class->class_id }}
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">課程名稱:{{ $class->class_name }}</h5>
-                        <p class="card-text JQellipsis">課程綱要: {{ $class->outline }}</p>
-                        <a href="{{ route( 'show_single_class' , $class->class_id ) }}" class="btn btn-primary">完整課程資訊</a>
-                        @if(Session::get("privilege") == 1 || (Session::get("privilege") == 2 && Session::get("user_name") == $announcement->announcer))
-                        <div class="btn-group" role="group" aria-label="Basic outlined example">
-                            <button type="button" class="btn btn-outline-success">Edit</button>
-                            <button type="button" class="btn btn-outline-danger">Delete</button>
-                        </div>
-                        @endif
-                    </div>
-                    <div class="card-footer text-muted">
-                        課程評價: {{ $class->rating }}
-                    </div>
+                <br>
+                <h3 class="text-center">公告</h3>
+            
+                @if(Session::has("message"))
+                <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
+                @endif
+                <br>
+                <div class = "row border border-dark">
+                    <div class = "col border border-dark">公告標題</div>
+                    <div class = "col-10 border border-dark">{{ $announcement->title }}</div>
                 </div>
-                @empty
-                <div class="card">
-                    <div class="card-header">
-                        發布者: Admin
-                    </div>
-                    <div class="card-body">
-                        <blockquote class="blockquote mb-0">
-                        <p>暫無資訊</p>
-                        </blockquote>
-                    </div>
+                <div class="row border border-dark">
+                    <div class = "col border border-dark">發佈人</div>
+                    <div class = "col-10 border border-dark">{{ $announcement->announcer }}</div>
                 </div>
-                @endforelse
-            {{ $classes->links() }}
+                <div class="row border border-dark">
+                    <div class = "col border border-dark">公告內容</div>
+                    <div class = "col-8 border border-dark" style="word-break:break-all; word-wrap:break-all;">{{ $announcement->content }}</div>
+                </div>
+                <br>
             </div>
-            
-            
-            
+
+
         </div>
-        
-
-
     </body>
-
-
-
 </html>

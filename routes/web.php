@@ -30,6 +30,10 @@ Route::get("/announcement_post",["as" => "announcement_post" , "uses" => functio
 }]);
 Route::post('/store_announcement',["as" => "store_announcement" , "uses" => "App\Http\Controllers\SystemController@store_announcement"]);//發布公告
 Route::get('/show_announcement',["as" => "show_announcement" , "uses" => "App\Http\Controllers\SystemController@show_announcement"]);//公告頁面
+Route::get("/{id}/show_single_announcement",["as" => "show_single_announcement" , "uses" => "App\Http\Controllers\SystemController@show_single_announcement"]);//完整公告內容
+Route::get("/{id}/edit_announcement",["as" => "edit_announcement" , "uses" => "App\Http\Controllers\SystemController@edit_announcement"]);//編輯公告的頁面
+Route::put("/{id}",["as" => "update_announcement" , "uses" => "App\Http\Controllers\SystemController@update_announcement"]);//編輯公告
+Route::delete("/{id}",["as" => "delete_announcement" , "uses" => "App\Http\Controllers\SystemController@delete_announcement"]);//刪除公告
 
 
 Route::get("/add_classInfo",["as" => "add_classInfo" , "uses" => function(){
@@ -41,3 +45,4 @@ Route::get("/add_classInfo",["as" => "add_classInfo" , "uses" => function(){
 Route::post('/store_classInfo',["as" => "store_classInfo" , "uses" => "App\Http\Controllers\SystemController@store_classInfo"]);//新增課程
 Route::get('/show_all_class',["as" => "show_all_class" , "uses" => "App\Http\Controllers\SystemController@show_all_class"]);//課程專區頁面
 Route::get('/{class_id}/show_single_class',["as" => "show_single_class" , "uses" => "App\Http\Controllers\SystemController@show_single_class"]);//完整課程資訊頁面
+Route::post('/{class_id}/store_rating',["as" => "store_rating" , "uses" => "App\Http\Controllers\SystemController@store_rating"]);//評鑑課程

@@ -24,6 +24,7 @@ class UserController extends Controller
             return \Redirect::back()->with("message","使用者不存在");
         }elseif(password_verify($password, $userData[0]->password)){
             session(["user_name" => $userData[0]->name]);
+            session(["privilege" => $userData[0]->privilege]);
             return redirect("/homepage");
         }else{
             return \Redirect::back()->with("message","密碼錯誤");
@@ -56,6 +57,7 @@ class UserController extends Controller
 
     public function logout(){
         session()->forget("user_name");
+        session()->forget("privilege");
         return redirect("/");
     }
 }

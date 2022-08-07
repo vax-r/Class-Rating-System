@@ -69,7 +69,12 @@
             </nav>
 
             <div class="container-sm">
+                <br>
                 <h3 class="text-center">課程資訊</h3>
+            
+                @if(Session::has("message"))
+                <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
+                @endif
                 <br>
                 <div class = "row border border-dark">
                     <div class = "col border border-dark">課程名稱</div>
@@ -97,11 +102,69 @@
                 </div>
                 <div class="row border border-dark">
                     <div class = "col border border-dark">課程大綱</div>
-                    <div class = "col-8 border border-dark">{{ $class_info[0]->outline }}</div>
+                    <div class = "col-8 border border-dark" style="word-break:break-all; word-wrap:break-all;">{{ $class_info[0]->outline }}</div>
                 </div>
+                <br>
+                <!-- 如果還沒評論過此課程 -->
+                @if(is_null($commented))
+                <form action = "{{ route('store_rating',request('class_id') ) }}" method="post">
+                    @csrf
+                    <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary text-white" id="basic-addon1">評分</span>
+                            <input type="text" class="form-control" name="rating" placeholder="rating" aria-label="rating" aria-describedby="basic-addon1" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">評語</span>
+                        <textarea class="form-control" name="comment" placeholder="僅能輸入100字以下" aria-label="With textarea" maxlength="100" required></textarea>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </form>
+                @else
+                <!-- 已評論過 -->
+                <div class="card border-dark mb-3 text-center">
+                    <div class="card-header bg-primary bg-gradient text-white">
+                        您已評論過此課程
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">您的評論: {{ $commented->comment }}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                            您的評分: {{ $commented->rating }}
+                    </div>
+                </div>
+                @endif
+                <br>
+
+                <!-- 顯示所有關於此課程的評論 -->
+                @forelse($class_comments as $class_comment)
+                    <div class="card border-dark mb-3 text-center">
+                        <div class="card-header">
+                            評分者: {{ $class_comment->commenter }}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">評論: {{ $class_comment->comment }}</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            課程評分: {{ $class_comment->rating }}
+                        </div>
+                    </div>
+                    @empty
+                    <div class="card">
+                        <div class="card-header">
+                            發布者: Admin
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                            <p>暫無資訊</p>
+                            </blockquote>
+                        </div>
+                    </div>
+                @endforelse
+                {{ $class_comments->links() }}
             </div>
 
-            <!-- 加上學生評價 -->
 
         </div>
     </body>

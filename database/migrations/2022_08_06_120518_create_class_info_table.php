@@ -22,7 +22,7 @@ class CreateClassInfoTable extends Migration
             $table->integer("credit")->comment("學分");
             $table->string("Required")->comment("必/選修");
             $table->text("outline")->nullable()->comment("課程綱要");
-            $table->tinyInteger("rating")->comment("平均評分");
+            $table->double("rating")->comment("平均評分");
         });
     }
 

@@ -83,7 +83,17 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $announcement->title }}</h5>
                         <p class="card-text JQellipsis">{{ $announcement->content }}</p>
-                        <a href="#" class="btn btn-primary">完整公告內容</a>
+                        <a href="{{ route('show_single_announcement', $announcement->id) }}" class="btn btn-primary">完整公告內容</a>
+                        @if(Session::get("privilege") == 1 || (Session::get("privilege") == 2 && Session::get("user_name") == $announcement->announcer))
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <a href="{{ route('edit_announcement' , $announcement->id ) }}" class="btn btn-outline-success">Edit</a>
+                            <form action="{{ route('delete_announcement' , $announcement->id ) }}" method="post">
+                                @csrf
+                                @method("delete")
+                                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('確認刪除?')">Delete</button>
+                            </form>
+                        </div>
+                        @endif
                     </div>
                     <div class="card-footer text-muted">
                         發布時間: {{ $announcement->created_at }}
@@ -114,6 +124,12 @@
                         <h5 class="card-title">課程名稱:{{ $class->class_name }}</h5>
                         <p class="card-text JQellipsis">課程綱要: {{ $class->outline }}</p>
                         <a href="{{ route( 'show_single_class' , $class->class_id ) }}" class="btn btn-primary">完整課程資訊</a>
+                        @if(Session::get("privilege") == 1 || (Session::get("privilege") == 2 && Session::get("user_name") == $announcement->announcer))
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <button type="button" class="btn btn-outline-success">Edit</button>
+                            <button type="button" class="btn btn-outline-danger">Delete</button>
+                        </div>
+                        @endif
                     </div>
                     <div class="card-footer text-muted">
                         課程評價: {{ $class->rating }}
@@ -131,7 +147,7 @@
                     </div>
                 </div>
                 @endforelse
-                <h6 class="text-end"><a href="{{ route('show_announcement') }}" class="link-info">...顯示更多課程</a></h6>
+                <h6 class="text-end"><a href="{{ route('show_all_class') }}" class="link-info">...顯示更多課程</a></h6>
             </div>
         </div>
     </body>
