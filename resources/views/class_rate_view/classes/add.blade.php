@@ -83,7 +83,6 @@
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="class_type" id="required_class" value="R">
                             <label class="form-check-label" for="required_class">必修</label>
-                            
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="class_type" id="selective_class" value="S">

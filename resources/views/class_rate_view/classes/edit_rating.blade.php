@@ -10,7 +10,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-
+    
     </head>
 
     <body>
@@ -52,57 +52,61 @@
 
             <div class="container-sm">
                 <br>
-                <h3 class="text-center">編輯課程資訊</h3>
+                <h3 class="text-center">課程資訊</h3>
             
                 @if(Session::has("message"))
                 <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
                 @endif
                 <br>
-                <form action="{{ route('update_classInfo' , $classInfo->id) }}" method="post">
+                <div class = "row border border-dark">
+                    <div class = "col border border-dark">課程名稱</div>
+                    <div class = "col-10 border border-dark">{{ $class_info[0]->class_name }}</div>
+                </div>
+                <div class="row border border-dark">
+                    <div class = "col border border-dark">課號</div>
+                    <div class = "col-10 border border-dark">{{ $class_info[0]->class_id }}</div>
+                </div>
+                <div class="row border border-dark">
+                    <div class = "col border border-dark">授課教師</div>
+                    <div class = "col-10 border border-dark">{{ $class_info[0]->teacher }}</div>
+                </div>
+                <div class="row border border-dark">
+                    <div class = "col border border-dark">課程評分</div>
+                    <div class = "col-10 border border-dark">{{ $class_info[0]->rating }}</div>
+                </div>
+                <div class="row border border-dark">
+                    <div class = "col border border-dark">必/選修</div>
+                    @if($class_info[0]->Required == "R")
+                    <div class = "col-10 border border-dark">必修</div>
+                    @else
+                    <div class = "col-10 border border-dark">選修</div>
+                    @endif
+                </div>
+                <div class="row border border-dark">
+                    <div class = "col border border-dark">課程大綱</div>
+                    <div class = "col-8 border border-dark" style="word-break:break-all; word-wrap:break-all;">{{ $class_info[0]->outline }}</div>
+                </div>
+                <br>
+
+                <form action = "{{ route('update_classRating', $class_rating->id ) }}" method="post">
                     @csrf
                     @method("put")
-                    <div class="form-group">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">課號</span>
-                            <input type="text" class="form-control" name="class_id" value="{{ $classInfo->class_id }}" aria-label="class_id" aria-describedby="basic-addon1" required>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">課程名稱</span>
-                            <input type="text" class="form-control" name="class_name" value="{{ $classInfo->class_name }}" aria-label="class_name" aria-describedby="basic-addon1" required>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">授課教師</span>
-                            <input type="text" class="form-control" name="teacher" value="{{ $classInfo->teacher }}" aria-label="teacher" aria-describedby="basic-addon1" required>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">學分</span>
-                            <input type="text" class="form-control" name="credit" value="{{ $classInfo->credit }}" aria-label="credit" aria-describedby="basic-addon1" required>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            @if($classInfo->Required == "R")
-                            <input class="form-check-input" type="radio" name="class_type" id="required_class" value="R" checked>
-                            @else
-                            <input class="form-check-input" type="radio" name="class_type" id="required_class" value="R">
-                            @endif
-                            <label class="form-check-label" for="required_class">必修</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            @if($classInfo->Required == "S")
-                            <input class="form-check-input" type="radio" name="class_type" id="selective_class" value="S" checked>
-                            @else
-                            <input class="form-check-input" type="radio" name="class_type" id="selective_class" value="S">
-                            @endif
-                            <label class="form-check-label" for="selective_class">選修</label>
-                        </div>
-                        <br><br>
-                        <label for="outline">課程綱要</label>
-                        <textarea class="form-control" name="outline" rows="3" required>{{ $classInfo->outline }}</textarea>
+                    <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary text-white" id="basic-addon1">評分</span>
+                            <input type="text" class="form-control" name="rating" value="{{ $class_rating->rating }}" aria-label="rating" aria-describedby="basic-addon1" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">評語</span>
+                        <textarea class="form-control" name="comment" placeholder="僅能輸入100字以下" aria-label="With textarea" maxlength="100" required>{{ $class_rating->comment }}</textarea>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-secondary">提交</button>
+                    <button type="submit" class="btn btn-primary">提交</button>
                 </form>
+
                 
-                <br>
+
+                
             </div>
 
 

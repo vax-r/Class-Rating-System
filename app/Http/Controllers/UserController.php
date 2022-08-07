@@ -45,7 +45,7 @@ class UserController extends Controller
         }
         else{
             $hashed_password = Hash::make($password);
-            $privilege = 1;
+            $privilege = 3;
             User::create([
                 "name" => $user_name,
                 "password" => $hashed_password,

@@ -132,6 +132,15 @@
                     </div>
                     <div class="card-footer text-muted">
                             您的評分: {{ $commented->rating }}
+                            <br>
+                            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                <a href="{{ route('edit_classRating' , $commented->id) }}" class="btn btn-outline-success">Edit</a>
+                                <form action="{{ route('delete_classRating' , $commented->id) }}" method="post">
+                                    @csrf
+                                    @method("delete")
+                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('確認刪除?')">Delete</button>
+                                </form>
+                            </div>
                     </div>
                 </div>
                 @endif
@@ -148,6 +157,18 @@
                         </div>
                         <div class="card-footer text-muted">
                             課程評分: {{ $class_comment->rating }}
+                            @if(Session::get("privilege") == 1)
+                            <!-- 管理者可以更改所有人的留言 -->
+                            <br>
+                            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                <a href="{{ route('edit_classRating' , $commented->id) }}" class="btn btn-outline-success">Edit</a>
+                                <form action="{{ route('delete_classRating' , $commented->id) }}" method="post">
+                                    @csrf
+                                    @method("delete")
+                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('確認刪除?')">Delete</button>
+                                </form>
+                            </div>
+                            @endif
                         </div>
                     </div>
                     @empty

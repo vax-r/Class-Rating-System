@@ -124,10 +124,14 @@
                         <h5 class="card-title">課程名稱:{{ $class->class_name }}</h5>
                         <p class="card-text JQellipsis">課程綱要: {{ $class->outline }}</p>
                         <a href="{{ route( 'show_single_class' , $class->class_id ) }}" class="btn btn-primary">完整課程資訊</a>
-                        @if(Session::get("privilege") == 1 || (Session::get("privilege") == 2 && Session::get("user_name") == $announcement->announcer))
+                        @if(Session::get("privilege") == 1)
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
-                            <button type="button" class="btn btn-outline-success">Edit</button>
-                            <button type="button" class="btn btn-outline-danger">Delete</button>
+                            <a href="{{ route('edit_classInfo' , $class->id) }}" class="btn btn-outline-success">Edit</a>
+                            <form action="{{ route('delete_classInfo' , $class->id) }}" method="post">
+                                @csrf
+                                @method("delete")
+                                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('確認刪除?')">Delete</button>
+                            </form>
                         </div>
                         @endif
                     </div>
