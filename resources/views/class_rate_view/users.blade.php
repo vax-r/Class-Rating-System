@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +9,19 @@
         <!-- use boostrap5 -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script>
+            $(function(){
+                var len = 50; // 超過50個字以"..."取代
+                $(".JQellipsis").each(function(i){
+                    if($(this).text().length>len){
+                        $(this).attr("title",$(this).text());
+                        var text=$(this).text().substring(0,len-1)+"...";
+                        $(this).text(text);
+                    }
+                });
+            });
+        </script>
     </head>
 
     <body>
@@ -54,35 +66,72 @@
                     </div>  
                 </div>
             </nav>
-
-            <h2 class="text-center">發布公告</h2>
-            <figure class="text-end">
-                <blockquote class="blockquote">
-                    <p class="text-end">使用者: {{ Session::get('user_name') }}</p>
-                </blockquote>
-            </figure>
-
-            @if(Session::has("message"))
-            <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
-            @endif
-
-            <form action="{{ route('store_announcement') }}" method="post">
-                @csrf
-                <div class="form-group">
-                    <label for="title">公告標題</label>
-                    <input class="form-control" name="title" placeholder="在這裡輸入您的標題" required></textarea>
-                    <label for="content">公告內容</label>
-                    <textarea class="form-control" name="content" rows="5" placeholder="在這裡輸入您的內容" required></textarea>
-
-                </div>
             <br>
-            <button type="submit" class="btn btn-secondary">提交</button>
-            </form>
+
+            <h2 class="text-center">管理使用者</h2>
+            <div class="container-sm">
+                <figure class="text-end">
+                    <blockquote class="blockquote">
+                        <p class="text-end">使用者: {{ Session::get('user_name') }}</p>
+                    </blockquote>
+                </figure>
+
+                @if(Session::has("message"))
+                <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
+                @endif
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">用戶名稱</th>
+                        <th scope="col">權限</th>
+                        <th scope="col">變更權限</th>
+                        <th scope="col"> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($users as $user)
+                        <tr>
+                            <th scope="row">{{$user->id}}</th>
+                            <td>{{ $user->name }}</td>
+                            @if($user->privilege == 1)
+                            <td>管理員</td>
+                            @elseif($user->privilege == 2)
+                            <td>SuperUser</td>
+                            @elseif($user->privilege == 3)
+                            <td>一般使用者</td>
+                            @else
+                            <td>停權</td>
+                            @endif
+                            <form action="{{ route('change_privilege', $user->id) }}" method="post">
+                                @csrf
+                                @method("put")
+                                <td>
+                                    <select class="form-select form-select-sm" name="privilege" aria-label=".form-select-sm example">
+                                        <option selected>選擇</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="-1">停權</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-secondary">更改</button>
+                                </td>
+                            </form>
+                        </tr>
+                        @empty
+                        <tr>
+                            <th scope="row">1</th>
+                            <th>尚未有使用者</th>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+
         </div>
-
-
     </body>
-
-
-
 </html>

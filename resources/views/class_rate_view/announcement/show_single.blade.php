@@ -55,7 +55,7 @@
                                 <li><a class="dropdown-item" href="{{ route('add_classInfo') }}">新增課程</a></li>
                                 @endif
                                 @if(Session::get("privilege")==1)
-                                <li><a class="dropdown-item" href="#">管理使用者</a></li>
+                                <li><a class="dropdown-item" href="{{ route('show_users') }}">管理使用者</a></li>
                                 @endif
                             </ul>
                             </li>

@@ -22,6 +22,8 @@ class UserController extends Controller
 
         if(!isset($userData[0]->name)){
             return \Redirect::back()->with("message","使用者不存在");
+        }elseif($userData[0]->privilege == -1){
+            return \Redirect::back()->with("message","使用者已遭停權");
         }elseif(password_verify($password, $userData[0]->password)){
             session(["user_name" => $userData[0]->name]);
             session(["privilege" => $userData[0]->privilege]);
@@ -59,5 +61,31 @@ class UserController extends Controller
         session()->forget("user_name");
         session()->forget("privilege");
         return redirect("/");
+    }
+
+    public function show_users(){
+        if(!session()->exists("user_name")){
+            return redirect("/")->with("warning","請先登入");
+        }
+        if(session("privilege")!==1){//如果不是管理員
+            return \Redirect::back()->with("alert","權限不足");
+        }
+        
+        $users = User::orderby("id","DESC")->paginate(10);
+        return view("class_rate_view.users")->with("users",$users);
+    }
+
+    public function change_privilege($id){
+        if(!session()->exists("user_name")){
+            return redirect("/")->with("warning","請先登入");
+        }
+        if(session("privilege")!==1){//如果不是管理員
+            return \Redirect::back()->with("alert","權限不足");
+        }
+        $user = User::find($id);
+        $new_p = Request::get("privilege");
+        $user->privilege = $new_p;
+        $user->save();
+        return \Redirect::back()->with("message","更改成功");
     }
 }
