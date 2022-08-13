@@ -40,6 +40,7 @@ Route::get("/{id}/edit_classInfo",["as" => "edit_classInfo" , "uses" => "App\Htt
 Route::put("/{id}/update_classInfo",["as" => "update_classInfo" , "uses" => "App\Http\Controllers\classInfoController@update_classInfo"]);//編輯課程資訊
 Route::delete("/{id}/delete_classInfo",["as" => "delete_classInfo" , "uses" => "App\Http\Controllers\classInfoController@delete_classInfo"]);//刪除課程資訊
 Route::get("/show_leaderboard",["as" => "show_leaderboard" , "uses" => "App\Http\Controllers\classInfoController@show_leaderboard"]);//顯示排行榜
+Route::get("/show_search",["as" => "show_search" , "uses" => "App\Http\Controllers\classInfoController@show_search"]);//顯示搜尋頁面
 
 Route::post('/{class_id}/store_rating',["as" => "store_rating" , "uses" => "App\Http\Controllers\classRatingController@store_rating"]);//評鑑課程
 Route::get("/{id}/edit_classRating",["as" => "edit_classRating" , "uses" => "App\Http\Controllers\classRatingController@edit_classRating"]);//編輯評論頁面

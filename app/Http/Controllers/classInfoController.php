@@ -108,4 +108,17 @@ class classInfoController extends Controller
         $classes = classInfo::orderby('rating','DESC')->paginate(5);
         return view("class_rate_view.classes.leaderboard")->with("classes",$classes);
     }
+
+    public function show_search(){
+        if(!session()->exists("user_name")){
+            return redirect("/")->with("warning","請先登入");
+        }
+        $query_string = Request::get("query");
+        if(strpos($query_string," ")!==false || strpos($query_string,";")!==false){
+            return \Redirect::back()->with("classes",NULL)->with("alert","請重新輸入");
+        }
+        $classes = classInfo::where("class_name" , $query_string)->get();
+        return view("class_rate_view.classes.search")->with("classes",$classes);
+    }
+
 }
