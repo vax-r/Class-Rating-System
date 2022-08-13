@@ -9,8 +9,28 @@
         <!-- use boostrap5 -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script>
+            $(function(){
+                var len = 50; // 超過50個字以"..."取代
+                $(".JQellipsis").each(function(i){
+                    if($(this).text().length>len){
+                        $(this).attr("title",$(this).text());
+                        var text=$(this).text().substring(0,len-1)+"...";
+                        $(this).text(text);
+                    }
+                });
+            });
+        </script>
 
+        <style>
+            .pagination{
+                float: right;
+                margin-top: 10px;
+            }
+        </style>
     </head>
+
     <body>
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -30,7 +50,7 @@
                                 <li><a class="dropdown-item" href="{{ route('show_all_class') }}">課程評價專區</a></li>
                                 <li><a class="dropdown-item" href="#">搜尋課程</a></li>
                                 <li><a class="dropdown-item" href="{{ route('show_leaderboard') }}">課程排行榜</a></li>
-                                @if(Session::get("privilege")==1 || Session::get("privilege")==2)
+                                @if(Session::get("privilege")!=3)
                                 <li><a class="dropdown-item" href="{{ route('announcement_post') }}">發布公告</a></li>
                                 <li><a class="dropdown-item" href="{{ route('add_classInfo') }}">新增課程</a></li>
                                 @endif
@@ -45,12 +65,8 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
                                 <li><a class="dropdown-item" href="{{ route('registerpage') }}">註冊</a></li>
-                                @if(Session::get("user_name"))
                                 <li><a class="dropdown-item" href="#">更改密碼</a></li>
                                 <li><a class="dropdown-item" href="{{ route('logout') }}">登出</a></li>
-                                @else
-                                <li><a class="dropdown-item" href="{{ route('loginpage') }}">登入</a></li>
-                                @endif
                             </ul>
                             </li>
                         </ul>
@@ -58,41 +74,66 @@
                 </div>
             </nav>
             
+            <br>
+            <h2 class="text-center">課程排行榜</h2>
+            <figure class="text-end">
+                <blockquote class="blockquote">
+                    <p class="text-end">使用者: {{ Session::get('user_name') }}</p>
+                </blockquote>
+            </figure>
+
+            @if(Session::has("message"))
+            <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
+            @endif
+
+            <br>
             <div class="container-sm">
-                <h2 class="text-center">NCU課程評鑑系統</h2>
-                <h3><small class="text-muted">註冊介面</small></h3>
-                @if(Session::has("message"))
-                <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
-                @elseif(Session::has("warning"))
-                <div class="alert alert-warning d-flex align-items-center" role="alert">
-                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                    <div>{{ Session::get("warning")}}</div>
+            @forelse($classes as $class)
+                <div class="card border-dark mb-3 text-center">
+                    <div class="card-header">
+                        課號: {{ $class->class_id }}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">課程名稱:{{ $class->class_name }}</h5>
+                        <p class="card-text JQellipsis">課程綱要: {{ $class->outline }}</p>
+                        <a href="{{ route( 'show_single_class' , $class->class_id ) }}" class="btn btn-primary">完整課程資訊</a>
+                        @if(Session::get("privilege") == 1)
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <a href="{{ route('edit_classInfo' , $class->id) }}" class="btn btn-outline-success">Edit</a>
+                            <form action="{{ route('delete_classInfo' , $class->id) }}" method="post">
+                                @csrf
+                                @method("delete")
+                                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('確認刪除?')">Delete</button>
+                            </form>
+                        </div>
+                        @endif
+                    </div>
+                    <div class="card-footer text-muted">
+                        課程評價: {{ $class->rating }}/5
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: {{ $class->rating *20 }}%" aria-valuenow="{{ $class->rating }}" aria-valuemin="0" aria-valuemax="5"></div>
+                        </div>
+                    </div>
                 </div>
-                @endif
-
-                <br>
-                <form action = "{{ route('register') }}" method="post">
-                    @csrf
-                    <div class = "mb-3">
-                        <label for="user_name" class="form-label">User Name</label>
-                        <input type = "user_name" class="form-control" name="user_name" id="user_name" placeholder="(allow only numbers & english letters, maximum length is 15)" pattern="[a-zA-Z0-9]+" max-length="15" required>
+                @empty
+                <div class="card">
+                    <div class="card-header">
+                        發布者: Admin
                     </div>
-                    <div class = "mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type = "password" class="form-control" name="password" id="password" placeholder="(allow only numbers & english letters, maximum length is 8)" pattern="[a-zA-Z0-9]+" max-length="8" required>
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                        <p>暫無資訊</p>
+                        </blockquote>
                     </div>
-                    <br>
-                    <button type="submit" class="btn btn-primary">註冊</button>
-                    <br><br>
-                    @if(!Session::has("user_name"))
-                    <small class="text-muted">已有帳號?   </small>
-                    <button type="button" class="btn btn-warning"><a href = "{{ route('loginpage') }}">登入</a></button>
-                    @endif
-                </form>
+                </div>
+                @endforelse
+            {{ $classes->links() }}
             </div>
-
+            
+            
+            
         </div>
-
+        
 
 
     </body>

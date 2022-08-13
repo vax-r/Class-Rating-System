@@ -100,4 +100,12 @@ class classInfoController extends Controller
         classInfo::destroy($id);//刪除此課程
         return \Redirect::back()->with("message","刪除成功");
     }
+
+    public function show_leaderboard(){
+        if(!session()->exists("user_name")){
+            return redirect("/")->with("warning","請先登入");
+        }
+        $classes = classInfo::orderby('rating','DESC')->paginate(5);
+        return view("class_rate_view.classes.leaderboard")->with("classes",$classes);
+    }
 }

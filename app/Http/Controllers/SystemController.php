@@ -17,7 +17,8 @@ class SystemController extends Controller
         }
         $announcements = Announcement::orderby('id','DESC')->take(3)->get();
         $class_infos = classInfo::orderby('id','DESC')->take(3)->get();
-        return view("class_rate_view.homepage")->with("announcements",$announcements)->with("classInfos",$class_infos);
+        $top_classes = classInfo::orderby('rating','DESC')->take(3)->get();
+        return view("class_rate_view.homepage")->with("announcements",$announcements)->with("classInfos",$class_infos)->with("top_classes",$top_classes);
     }
 
 }

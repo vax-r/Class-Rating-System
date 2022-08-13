@@ -20,6 +20,9 @@ class classRatingController extends Controller
         if(!is_null($commented)){
             return \Redirect::back()->with("message","您已評論過此課程");
         }
+        if(Request::get("rating")<0 || Request::get("rating")>5){
+            return \Redirect::back()->with("message","評分範圍在0~5");
+        }
 
         classRating::create([
             "class_id" => $class_id,
@@ -60,6 +63,9 @@ class classRatingController extends Controller
         $class_rating = classRating::find($id);
         if(session("privilege")!==1 && session("user_name")!==$class_rating->commenter){//如果只是普通使用者並嘗試更改他人的公告
             return \Redirect::back()->with("warning","權限不足");
+        }
+        if(Request::get("rating")<0 || Request::get("rating")>5){
+            return \Redirect::back()->with("warning","評分範圍在0~5");
         }
         $class_rating->rating = Request::get("rating");
         $class_rating->comment = Request::get("comment");

@@ -42,7 +42,7 @@
                                 <li><a class="dropdown-item" href="{{ route('show_announcement') }}">公告專區</a></li>
                                 <li><a class="dropdown-item" href="{{ route('show_all_class') }}">課程評價專區</a></li>
                                 <li><a class="dropdown-item" href="#">搜尋課程</a></li>
-                                <li><a class="dropdown-item" href="#">課程排行榜</a></li>
+                                <li><a class="dropdown-item" href="{{ route('show_leaderboard') }}">課程排行榜</a></li>
                                 @if(Session::get("privilege")!=3)
                                 <li><a class="dropdown-item" href="{{ route('announcement_post') }}">發布公告</a></li>
                                 <li><a class="dropdown-item" href="{{ route('add_classInfo') }}">新增課程</a></li>
@@ -66,7 +66,7 @@
                     </div>  
                 </div>
             </nav>
-
+            <br>
             <h2 class="text-center">首頁</h2>
 
             <div class="container-sm">
@@ -77,46 +77,79 @@
                 </figure>
 
             
-            
-                <h3>公告</h3>
-                @forelse($announcements as $announcement)
-                <div class="card border-dark mb-3 text-center">
-                    <div class="card-header">
-                        發布者: {{ $announcement->announcer }}
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $announcement->title }}</h5>
-                        <p class="card-text JQellipsis">{{ $announcement->content }}</p>
-                        <a href="{{ route('show_single_announcement', $announcement->id) }}" class="btn btn-primary">完整公告內容</a>
-                        @if(Session::get("privilege") == 1 || (Session::get("privilege") == 2 && Session::get("user_name") == $announcement->announcer))
-                        <div class="btn-group" role="group" aria-label="Basic outlined example">
-                            <a href="{{ route('edit_announcement' , $announcement->id ) }}" class="btn btn-outline-success">Edit</a>
-                            <form action="{{ route('delete_announcement' , $announcement->id ) }}" method="post">
-                                @csrf
-                                @method("delete")
-                                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('確認刪除?')">Delete</button>
-                            </form>
+                <div class="row">
+                    <div class="col">
+                        <h3>公告</h3>
+                        @forelse($announcements as $announcement)
+                        <div class="card border-dark mb-3 text-center">
+                            <div class="card-header">
+                                發布者: {{ $announcement->announcer }}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $announcement->title }}</h5>
+                                <p class="card-text JQellipsis">{{ $announcement->content }}</p>
+                                <a href="{{ route('show_single_announcement', $announcement->id) }}" class="btn btn-primary">完整公告內容</a>
+                                @if(Session::get("privilege") == 1 || (Session::get("privilege") == 2 && Session::get("user_name") == $announcement->announcer))
+                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                    <a href="{{ route('edit_announcement' , $announcement->id ) }}" class="btn btn-outline-success">Edit</a>
+                                    <form action="{{ route('delete_announcement' , $announcement->id ) }}" method="post">
+                                        @csrf
+                                        @method("delete")
+                                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('確認刪除?')">Delete</button>
+                                    </form>
+                                </div>
+                                @endif
+                            </div>
+                            <div class="card-footer text-muted">
+                                發布時間: {{ $announcement->created_at }}
+                            </div>
                         </div>
-                        @endif
+                        @empty
+                        <div class="card">
+                            <div class="card-header">
+                                發布者: Admin
+                            </div>
+                            <div class="card-body">
+                                <blockquote class="blockquote mb-0">
+                                <p>暫無公告</p>
+                                </blockquote>
+                            </div>
+                        </div>
+                        @endforelse
+                        <h6 class="text-end"><a href="{{ route('show_announcement') }}" class="link-info">...顯示更多公告</a></h6>
                     </div>
-                    <div class="card-footer text-muted">
-                        發布時間: {{ $announcement->created_at }}
+                    <div class="col">
+                        <h3>課程排行榜</h3>
+                        @forelse($top_classes as $top_class)
+                        <div class="card border-dark mb-3 text-center">
+                            <div class="card-header">
+                                第{{$loop->iteration}}名
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">課程名稱:{{ $top_class->class_name }}</h5>
+                            </div>
+                            <div class="card-footer text-muted">
+                                課程評價: {{ $top_class->rating }}/5
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: {{ $top_class->rating *20 }}%" aria-valuenow="{{ $top_class->rating }}" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="card">
+                            <div class="card-header">
+                                發布者: Admin
+                            </div>
+                            <div class="card-body">
+                                <blockquote class="blockquote mb-0">
+                                <p>暫無資訊</p>
+                                </blockquote>
+                            </div>
+                        </div>
+                        @endforelse
                     </div>
                 </div>
-                @empty
-                <div class="card">
-                    <div class="card-header">
-                        發布者: Admin
-                    </div>
-                    <div class="card-body">
-                        <blockquote class="blockquote mb-0">
-                        <p>暫無公告</p>
-                        </blockquote>
-                    </div>
-                </div>
-                @endforelse
-                <h6 class="text-end"><a href="{{ route('show_announcement') }}" class="link-info">...顯示更多公告</a></h6>
-            
+
                 <br>
                 <h3>課程評價</h3>
                 @forelse($classInfos as $class)
@@ -140,7 +173,10 @@
                         @endif
                     </div>
                     <div class="card-footer text-muted">
-                        課程評價: {{ $class->rating }}
+                        課程評價: {{ $class->rating }}/5
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: {{ $class->rating *20 }}%" aria-valuenow="{{ $class->rating }}" aria-valuemin="0" aria-valuemax="5"></div>
+                        </div>
                     </div>
                 </div>
                 @empty

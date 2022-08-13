@@ -49,7 +49,7 @@
                                 <li><a class="dropdown-item" href="{{ route('show_announcement') }}">公告專區</a></li>
                                 <li><a class="dropdown-item" href="{{ route('show_all_class') }}">課程評價專區</a></li>
                                 <li><a class="dropdown-item" href="#">搜尋課程</a></li>
-                                <li><a class="dropdown-item" href="#">課程排行榜</a></li>
+                                <li><a class="dropdown-item" href="{{ route('show_leaderboard') }}">課程排行榜</a></li>
                                 @if(Session::get("privilege")!=3)
                                 <li><a class="dropdown-item" href="{{ route('announcement_post') }}">發布公告</a></li>
                                 <li><a class="dropdown-item" href="{{ route('add_classInfo') }}">新增課程</a></li>
@@ -117,7 +117,7 @@
                     @csrf
                     <div class="input-group mb-3">
                             <span class="input-group-text bg-primary text-white" id="basic-addon1">評分</span>
-                            <input type="text" class="form-control" name="rating" placeholder="rating" aria-label="rating" aria-describedby="basic-addon1" required>
+                            <input type="number" class="form-control" name="rating" placeholder="give your rating between 0~5" min="0" max="5" aria-label="rating" aria-describedby="basic-addon1" required>
                     </div>
                     
                     <div class="input-group">

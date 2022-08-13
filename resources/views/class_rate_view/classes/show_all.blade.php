@@ -49,7 +49,7 @@
                                 <li><a class="dropdown-item" href="{{ route('show_announcement') }}">公告專區</a></li>
                                 <li><a class="dropdown-item" href="{{ route('show_all_class') }}">課程評價專區</a></li>
                                 <li><a class="dropdown-item" href="#">搜尋課程</a></li>
-                                <li><a class="dropdown-item" href="#">課程排行榜</a></li>
+                                <li><a class="dropdown-item" href="{{ route('show_leaderboard') }}">課程排行榜</a></li>
                                 @if(Session::get("privilege")!=3)
                                 <li><a class="dropdown-item" href="{{ route('announcement_post') }}">發布公告</a></li>
                                 <li><a class="dropdown-item" href="{{ route('add_classInfo') }}">新增課程</a></li>
@@ -108,7 +108,10 @@
                         @endif
                     </div>
                     <div class="card-footer text-muted">
-                        課程評價: {{ $class->rating }}
+                        課程評價: {{ $class->rating }}/5
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: {{ $class->rating *20 }}%" aria-valuenow="{{ $class->rating }}" aria-valuemin="0" aria-valuemax="5"></div>
+                        </div>
                     </div>
                 </div>
                 @empty
