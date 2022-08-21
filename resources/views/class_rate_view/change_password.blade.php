@@ -89,15 +89,15 @@
                         
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Current Password</span>
-                            <input type="password" class="form-control" name="old_password" placeholder="請輸入當前密碼" aria-label="old_password" aria-describedby="basic-addon1" required>
+                            <input type="password" class="form-control" name="old_password" placeholder="請輸入當前密碼" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{3,8}" aria-label="old_password" aria-describedby="basic-addon1" required>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">New Password</span>
-                            <input type="password" class="form-control" name="new_password" placeholder="請輸入新密碼" aria-label="new_password" aria-describedby="basic-addon1" required>
+                            <input type="password" class="form-control" name="new_password" placeholder="請輸入新密碼" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{3,8}" aria-label="new_password" aria-describedby="basic-addon1" required>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Verify your Password</span>
-                            <input type="password" class="form-control" name="verify_new_password" placeholder="請再次輸入新密碼" aria-label="verify_new_password" aria-describedby="basic-addon1" required>
+                            <input type="password" class="form-control" name="verify_new_password" placeholder="請再次輸入新密碼" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{3,8}" aria-label="verify_new_password" aria-describedby="basic-addon1" required>
                         </div>
                         <br>
                         <button type="submit" class="btn btn-outline-primary btn-lg">更改</button>

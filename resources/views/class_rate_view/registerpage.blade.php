@@ -79,7 +79,7 @@
                     </div>
                     <div class = "mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type = "password" class="form-control" name="password" id="password" placeholder="(allow only numbers & english letters, maximum length is 8)" pattern="[a-zA-Z0-9]+" max-length="8" required>
+                        <input type = "password" class="form-control" name="password" id="password" placeholder="(allow only numbers & english letters, maximum length is 8)" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{3,8}" max-length="8" required>
                     </div>
                     <br>
                     <button type="submit" class="btn btn-primary">註冊</button>
