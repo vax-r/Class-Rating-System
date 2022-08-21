@@ -167,8 +167,8 @@
                             <!-- 管理者可以更改所有人的留言 -->
                             <br>
                             <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                <a href="{{ route('edit_classRating' , $commented->id) }}" class="btn btn-outline-success">Edit</a>
-                                <form action="{{ route('delete_classRating' , $commented->id) }}" method="post">
+                                <a href="{{ route('edit_classRating' , $class_comment->id) }}" class="btn btn-outline-success">Edit</a>
+                                <form action="{{ route('delete_classRating' , $class_comment->id) }}" method="post">
                                     @csrf
                                     @method("delete")
                                     <button type="submit" class="btn btn-outline-danger" onclick="return confirm('確認刪除?')">Delete</button>

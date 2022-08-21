@@ -79,6 +79,11 @@
                 @if(Session::has("message"))
                 <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
                 @endif
+                @if(Session::has("alert"))
+                <script>
+                    alert("{{ session()->get('alert') }}");
+                </script>
+                @endif
 
                 <table class="table">
                     <thead>
@@ -109,10 +114,10 @@
                                 @method("put")
                                 <td>
                                     <select class="form-select form-select-sm" name="privilege" aria-label=".form-select-sm example">
-                                        <option selected>選擇</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
+                                        <option selected value="0">選擇</option>
+                                        <option value="1">管理員</option>
+                                        <option value="2">Super User</option>
+                                        <option value="3">一般使用者</option>
                                         <option value="-1">停權</option>
                                     </select>
                                 </td>

@@ -84,6 +84,9 @@ class UserController extends Controller
         }
         $user = User::find($id);
         $new_p = Request::get("privilege");
+        if($new_p==="0"){
+            return \Redirect::back()->with("alert","請選擇一個選項");
+        }
         $user->privilege = $new_p;
         $user->save();
         return \Redirect::back()->with("message","更改成功");
