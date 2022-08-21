@@ -91,4 +91,32 @@ class UserController extends Controller
         $user->save();
         return \Redirect::back()->with("message","更改成功");
     }
+
+    public function change_password_page(){
+        if(!session()->exists("user_name")){
+            return redirect("/")->with("warning","請先登入");
+        }
+        return view("class_rate_view.change_password");
+    }
+
+    public function change_password(){
+        if(!session()->exists("user_name")){
+            return redirect("/")->with("warning","請先登入");
+        }
+
+        $user = User::where("name",session("user_name"))->get();
+        $new_password = Request::get("new_password");
+        if(!password_verify(Request::get("old_password"),$user[0]->password)){
+            return \Redirect::back()->with("alert","當前密碼錯誤");
+        }
+        elseif(password_verify($new_password,$user[0]->password)){
+            return \Redirect::back()->with("alert","新密碼不能與當前密碼相同");
+        }
+        elseif($new_password !== Request::get("verify_new_password")){
+            return \Redirect::back()->with("alert","新密碼驗證錯誤");
+        }
+        $user[0]->password = Hash::make($new_password);
+        $user[0]->save();
+        return \Redirect::back()->with("alert","更改成功");
+    }
 }

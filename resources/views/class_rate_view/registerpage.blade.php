@@ -46,7 +46,7 @@
                             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
                                 <li><a class="dropdown-item" href="{{ route('registerpage') }}">註冊</a></li>
                                 @if(Session::get("user_name"))
-                                <li><a class="dropdown-item" href="#">更改密碼</a></li>
+                                <li><a class="dropdown-item" href="{{ route('change_password_page') }}">更改密碼</a></li>
                                 <li><a class="dropdown-item" href="{{ route('logout') }}">登出</a></li>
                                 @else
                                 <li><a class="dropdown-item" href="{{ route('loginpage') }}">登入</a></li>

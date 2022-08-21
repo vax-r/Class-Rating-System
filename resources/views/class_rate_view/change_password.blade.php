@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,12 +10,23 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    
+        <script>
+            $(function(){
+                var len = 50; // 超過50個字以"..."取代
+                $(".JQellipsis").each(function(i){
+                    if($(this).text().length>len){
+                        $(this).attr("title",$(this).text());
+                        var text=$(this).text().substring(0,len-1)+"...";
+                        $(this).text(text);
+                    }
+                });
+            });
+        </script>
     </head>
 
     <body>
-    <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ route('homepage') }}">課程評鑑系統</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,67 +66,45 @@
                     </div>  
                 </div>
             </nav>
-
+            @if(Session::has("alert"))
+            <script>
+                alert("{{ session()->get('alert') }}");
+            </script>
+            @endif
+            <br>
             <div class="container-sm">
+                <h2 class="text-center">更改密碼</h2>
                 <br>
-                <h3 class="text-center">課程資訊</h3>
-            
-                @if(Session::has("message"))
-                <div class = "alert alert-success" role="alert">{{ Session::get("message") }}</div>
-                @endif
-                <br>
-                <div class = "row border border-dark">
-                    <div class = "col border border-dark">課程名稱</div>
-                    <div class = "col-10 border border-dark">{{ $class_info[0]->class_name }}</div>
-                </div>
-                <div class="row border border-dark">
-                    <div class = "col border border-dark">課號</div>
-                    <div class = "col-10 border border-dark">{{ $class_info[0]->class_id }}</div>
-                </div>
-                <div class="row border border-dark">
-                    <div class = "col border border-dark">授課教師</div>
-                    <div class = "col-10 border border-dark">{{ $class_info[0]->teacher }}</div>
-                </div>
-                <div class="row border border-dark">
-                    <div class = "col border border-dark">課程評分</div>
-                    <div class = "col-10 border border-dark">{{ $class_info[0]->rating }}</div>
-                </div>
-                <div class="row border border-dark">
-                    <div class = "col border border-dark">必/選修</div>
-                    @if($class_info[0]->Required == "R")
-                    <div class = "col-10 border border-dark">必修</div>
-                    @else
-                    <div class = "col-10 border border-dark">選修</div>
-                    @endif
-                </div>
-                <div class="row border border-dark">
-                    <div class = "col border border-dark">課程大綱</div>
-                    <div class = "col-8 border border-dark" style="word-break:break-all; word-wrap:break-all;">{{ $class_info[0]->outline }}</div>
-                </div>
+                <figure class="text-end">
+                    <blockquote class="blockquote">
+                        <p class="text-end">使用者: {{ Session::get('user_name') }}</p>
+                    </blockquote>
+                </figure>
                 <br>
 
-                <form action = "{{ route('update_classRating', $class_rating->id ) }}" method="post">
+                <form action="{{ route('change_password') }}" method="post">
                     @csrf
                     @method("put")
-                    <div class="input-group mb-3">
-                            <span class="input-group-text bg-primary text-white" id="basic-addon1">評分</span>
-                            <input type="number" class="form-control" name="rating" value="{{ $class_rating->rating }}" min="0" max="5" aria-label="rating" aria-describedby="basic-addon1" required>
+                    <div class="form-group">
+                        
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Current Password</span>
+                            <input type="password" class="form-control" name="old_password" placeholder="請輸入當前密碼" aria-label="old_password" aria-describedby="basic-addon1" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">New Password</span>
+                            <input type="password" class="form-control" name="new_password" placeholder="請輸入新密碼" aria-label="new_password" aria-describedby="basic-addon1" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Verify your Password</span>
+                            <input type="password" class="form-control" name="verify_new_password" placeholder="請再次輸入新密碼" aria-label="verify_new_password" aria-describedby="basic-addon1" required>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-outline-primary btn-lg">更改</button>
                     </div>
-                    
-                    <div class="input-group">
-                        <span class="input-group-text bg-primary text-white">評語</span>
-                        <textarea class="form-control" name="comment" placeholder="僅能輸入100字以下" aria-label="With textarea" maxlength="100" required>{{ $class_rating->comment }}</textarea>
-                    </div>
-                    <br>
-                    <button type="submit" class="btn btn-primary">提交</button>
                 </form>
-
-                
-
-                
             </div>
-
-
         </div>
     </body>
+
 </html>

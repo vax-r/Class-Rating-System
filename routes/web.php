@@ -22,6 +22,8 @@ Route::post('/register',["as" => "register" , "uses" => "App\Http\Controllers\Us
 Route::get("/logout",["as" => "logout" , "uses" => "App\Http\Controllers\UserController@logout"]);//登出
 Route::get("/show_users",["as" => "show_users" , "uses" => "App\Http\Controllers\UserController@show_users"]);//管理使用者頁面
 Route::put("/{id}/change_privilege", ["as" => "change_privilege" , "uses" => "App\Http\Controllers\UserController@change_privilege"]);//更改使用者權限
+Route::get("/change_password_page", ["as" => "change_password_page" , "uses" => "App\Http\Controllers\UserController@change_password_page"]);//更改密碼頁面
+Route::put("/change_password", ["as" => "change_password" , "uses" => "App\Http\Controllers\UserController@change_password"]);//更改密碼
 
 Route::get("/homepage",["as" => "homepage" , "uses" => "App\Http\Controllers\SystemController@homepage"]);//首頁
 
